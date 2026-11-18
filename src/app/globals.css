@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@import "../brand/theme.css";
+
+@theme {
+  --animate-fade-up: fade-up 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  --animate-marquee: marquee 45s linear infinite;
+  --animate-toast: toast-in 0.45s ease both;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-weight: 300;
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent-light);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply text-xs uppercase tracking-[0.3em] text-accent;
+  }
+  .heading-xl {
+    @apply font-display font-normal leading-[1.08] text-5xl md:text-[52px];
+  }
+  .btn-primary {
+    @apply inline-flex min-h-[52px] items-center justify-center bg-accent px-8 text-[13px] font-medium uppercase tracking-[0.15em] text-ink transition-colors hover:bg-accent-light disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-[52px] items-center justify-center border border-ivory/35 px-8 text-[13px] uppercase tracking-[0.15em] text-ivory transition-colors hover:border-accent-light hover:text-accent-light;
+  }
+  .link-underline {
+    @apply border-b border-current pb-1 text-[13px] uppercase tracking-[0.15em] text-accent-light transition-colors hover:text-ivory;
+  }
+  .field {
+    @apply min-h-[48px] w-full border border-ivory/25 bg-transparent px-4 text-sm text-ivory placeholder:text-ash focus:border-accent-light focus:outline-none;
+  }
+  .container-x {
+    @apply mx-auto w-full max-w-[1280px] px-5 md:px-10;
+  }
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

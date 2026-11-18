@@ -1,0 +1,133 @@
+// brand-store – database schema
+// Docs: https://www.prisma.io/docs/orm/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// Dáng chai – quyết định mô hình 3D và hình minh hoạ
+enum BottleShape {
+  RECT     // chai vuông thuỷ tinh dày
+  CYLINDER // chai trụ cao
+  FACETED  // chai cắt nhiều mặt
+  ROUND    // chai bầu tròn
+}
+
+/// Tâm trạng dùng cho Scent Finder
+enum Mood {
+  WARM
+  FRESH
+  MYSTERY
+  CLEAN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPING
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  COD
+  BANK_TRANSFER
+  VNPAY
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+}
+
+model Product {
+  id            String      @id @default(cuid())
+  slug          String      @unique
+  name          String
+  shape         BottleShape
+  mood          Mood
+  /// Màu chủ đạo của nước hoa, ví dụ "#C8873A"
+  tint          String
+  notesVi       String
+  notesEn       String
+  taglineVi     String
+  taglineEn     String
+  descriptionVi String
+  descriptionEn String
+  /// { top: {vi,en}, heart: {vi,en}, base: {vi,en} }
+  pyramid       Json
+  sortOrder     Int         @default(0)
+  active        Boolean     @default(true)
+  variants      Variant[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Variant {
+  id         String      @id @default(cuid())
+  productId  String
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku        String      @unique
+  sizeMl     Int
+  /// Giá bán, đơn vị VNĐ
+  price      Int
+  stock      Int         @default(0)
+  orderItems OrderItem[]
+
+  @@unique([productId, sizeMl])
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  /// Mã đơn hiển thị cho khách, ví dụ OE251118-7K3P
+  code          String        @unique
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus @default(UNPAID)
+  customerName  String
+  phone         String
+  email         String
+  address       String
+  province      String
+  note          String?
+  subtotal      Int
+  giftFee       Int           @default(0)
+  shippingFee   Int
+  total         Int
+  locale        String        @default("vi")
+  /// Mã giao dịch từ cổng thanh toán (VNPay)
+  paymentRef    String?
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId   String
+  variant     Variant @relation(fields: [variantId], references: [id])
+  /// Lưu lại tên và giá tại thời điểm đặt hàng
+  productName String
+  sizeMl      Int
+  unitPrice   Int
+  quantity    Int
+  engraving   String?
+  giftWrap    Boolean @default(false)
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  locale    String   @default("vi")
+  createdAt DateTime @default(now())
+}

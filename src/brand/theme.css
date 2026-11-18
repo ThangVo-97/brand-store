@@ -1,0 +1,29 @@
+/*
+ * ─────────────────────────────────────────────────────────────
+ *  MÀU SẮC & FONT CỦA THƯƠNG HIỆU
+ *  Đổi các giá trị dưới đây là toàn bộ giao diện đổi theo.
+ *  Tên font phải khớp với brand.ts (fonts.display / fonts.sans).
+ * ─────────────────────────────────────────────────────────────
+ */
+@theme {
+  /* Nền tối, từ đậm đến nhạt */
+  --color-ink: #0e0c0a;
+  --color-ink-2: #13100d;
+  --color-ink-3: #1a1612;
+  --color-ink-4: #241d16;
+
+  /* Chữ, từ sáng đến tối */
+  --color-ivory: #f2ebdd;
+  --color-sand: #cfc6b6;
+  --color-smoke: #a99f8e;
+  --color-ash: #8c8272;
+  --color-umber: #4a4238;
+
+  /* Màu nhấn của thương hiệu */
+  --color-accent: #c8873a;       /* nút chính, điểm nhấn */
+  --color-accent-light: #e3b479; /* giá, link, viền nhấn */
+  --color-accent-dark: #8a5a24;  /* chữ nhấn trên nền sáng */
+
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Be Vietnam Pro", system-ui, sans-serif;
+}
